@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Connecting a new connection with mongoose db 
-mongoose.connect("mongodb://localhost:27017/mongtest")
+mongoose.connect("mongodb://localhost:27017/mongtest", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('connection successfull...'))
     .catch((err) => console.log(err));
 
@@ -84,8 +84,16 @@ const createDocument = async () => {
 
 // get data from the database
 const getDocument = async () => {
-    const result = await Playlist.find({});
-    console.log(result);
+    try {
+        const result = await Playlist.find({ ctype: "Front End" })
+            .select({ _id: 0, name: 1 })
+            .limit(3);
+        console.log(result.length);
+        console.log(result);
+    } catch (error) {
+        console.log(error)
+    }
+    
 }
 
 //Function call to get data from mongo database

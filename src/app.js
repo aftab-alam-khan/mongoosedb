@@ -85,6 +85,9 @@ const createDocument = async () => {
 // get data from the database
 const getDocument = async () => {
     try {
+        // const result = await Playlist.find()
+        //     .select({ _id: 0, name: 1 })
+        //     .limit(3);
         const result = await Playlist.find({ ctype: "Front End" })
             .select({ _id: 0, name: 1 })
             .limit(3);

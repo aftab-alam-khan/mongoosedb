@@ -85,14 +85,45 @@ const createDocument = async () => {
 // get data from the database
 const getDocument = async () => {
     try {
-        // const result = await Playlist.find()
-        //     .select({ _id: 0, name: 1 })
-        //     .limit(3);
-        const result = await Playlist.find({ ctype: "Front End" })
-            .select({ _id: 0, name: 1 })
-            .limit(3);
-        console.log(result.length);
-        console.log(result);
+        // normal find
+        const result = await Playlist.find().select({ _id: 0, name: 1 }).limit(2);
+        console.log('result ',result);
+
+        //greater than
+        const result1 = await Playlist.find({ session: { $gt: 2 } }).select({ _id: 0, name: 1 });
+        console.log('result1 ',result1);
+
+        // greater than equalto
+        const result2 = await Playlist.find({ session: { $gte: 3 } }).select({ _id: 0, name: 1 });
+        console.log('result2 ',result2);
+
+        // less than equal to
+        const result3 = await Playlist.find({ session: { $lte: 3 } }).select({ _id: 0, name: 1 });
+        console.log('result3 ',result3);
+
+        // find in
+        const result4 = await Playlist.find({ ctype: {$in: ['Back End']} }).select({ _id: 0, name: 1 });
+        console.log('result4 ', result4);
+        
+        // find not-in
+        const result5 = await Playlist.find({ ctype: {$nin: ['Back End']} }).select({ _id: 0, name: 1 });
+        console.log('result5 ', result5);
+        
+        // Logical oprator or
+        const result6 = await Playlist.find({ $or: [{ ctype: 'Front End' }, { author: 'Aftab' }] }).select({ _id: 0, name: 1 });
+        console.log('result6:', result6);
+
+        // Logical oprator and with count
+        const result7 = await Playlist.find({ $and: [{ ctype: 'Front End' }, { author: 'Aftab' }] }).countDocuments();
+        console.log('result7:', result7);
+
+        // sort the result output in Ascending order
+        const result8 = await Playlist.find({ author: 'Aftab' }).select({ _id: 0, name: 1 }).sort({name: 1});
+        console.log('result8:', result8);
+
+        // sort the result output in Descending order
+        const result9 = await Playlist.find({ author: 'Aftab' }).select({ _id: 0, name: 1 }).sort({name: -1});
+        console.log('result9:', result9);
     } catch (error) {
         console.log(error)
     }

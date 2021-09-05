@@ -1,5 +1,6 @@
 // import the mongoose library
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 // Connecting a new connection with mongoose db 
 mongoose.connect("mongodb://localhost:27017/mongtest", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -42,6 +43,16 @@ const playlistSchema = new mongoose.Schema({
         }
     },
     author: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error("Email is not a valid.");
+            }
+        }
+    },
     active: Boolean,
     date: {
         type: Date,
@@ -76,8 +87,9 @@ const createDocument = async () => {
         const javaScriptPlaylist = new Playlist({
             name: 'Javascript',
             ctype: 'Front End',
-            session: -2,
+            session: 2,
             author: 'Aftab',
+            email: 'test@gmail.com',
             active: true,
         })
         const mongoPlaylist = new Playlist({
@@ -85,6 +97,7 @@ const createDocument = async () => {
             ctype: 'Back End',
             session: 4,
             author: 'Aftab',
+            email: 'test1@gmail.com',
             active: true,
         })
         const mongoosePlaylist = new Playlist({
@@ -92,6 +105,7 @@ const createDocument = async () => {
             ctype: 'Back End',
             session: 5,
             author: 'Aftab',
+            email: 'test2@gmail.com',
             active: true,
         })
 

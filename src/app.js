@@ -131,5 +131,38 @@ const getDocument = async () => {
 }
 
 //Function call to get data from mongo database
-getDocument()
+// getDocument()
 
+// update the collection document
+const updateDocument = async (_id) => {
+    try {
+        // update by updateOne
+        // const result = await Playlist.updateOne({ _id }, { name: 'Javascript' });
+
+        // update by find
+        const result = await Playlist.findByIdAndUpdate({ _id }, { $set: { name: 'Javascript' } }, { useFindAndModify: false, new: true });
+        console.log('result:', result)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Function call to update data from mongo database
+// updateDocument('612a986afffbdbd4f32613a0')
+
+// Delete the Document
+const deleteDocument = async (_id) => {
+    try {
+        // delete by one method
+        // const result = await Playlist.deleteOne({ _id });
+
+        // delete by id method
+        const result = await Playlist.findByIdAndDelete({ _id });
+        console.log('result:', result);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Function call to delete the Data from Mongo database
+deleteDocument('6133a60f5d052ac8f2831de4');

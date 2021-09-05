@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Connecting a new connection with mongoose db 
-mongoose.connect("mongodb://localhost:27017/mongtest", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb://localhost:27017/mongtest", { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
     .then(() => console.log('connection successfull...'))
     .catch((err) => console.log(err));
 
@@ -13,10 +13,34 @@ mongoose.connect("mongodb://localhost:27017/mongtest", { useNewUrlParser: true, 
 const playlistSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        minLength: 2,
+        minLength: [2, 'Please pass min two letter name.'],
+        maxLength: 30
     },
-    ctype: String,
-    session: Number,
+    ctype: {
+        type: String,
+        required: true,
+        lowercase: true,
+        enum: ['front end', 'back end', 'database']
+    },
+    session: {
+        type: Number,
+        // validate(value) {
+        //     if (value < 0) {
+        //         throw new Error("Negative number not allowed");
+        //     }
+        // }
+        validate: {
+            validator: function (value) {
+                return value > 0;
+            },
+            message: "Negative number not allowed"
+        }
+    },
     author: String,
     active: Boolean,
     date: {
@@ -52,7 +76,7 @@ const createDocument = async () => {
         const javaScriptPlaylist = new Playlist({
             name: 'Javascript',
             ctype: 'Front End',
-            session: 3,
+            session: -2,
             author: 'Aftab',
             active: true,
         })
@@ -75,12 +99,13 @@ const createDocument = async () => {
         const result = await Playlist.insertMany([javaScriptPlaylist, mongoPlaylist, mongoosePlaylist]);
         console.log(result);
     } catch (err) {
-        console.trace('Error: ', err.message);
+        console.trace('Error: ', err);
     }
     
 }
 // Function call to inster a document in the database
-// createDocument();
+// adding inbulid validation
+createDocument();
 
 // get data from the database
 const getDocument = async () => {
@@ -165,4 +190,7 @@ const deleteDocument = async (_id) => {
 }
 
 // Function call to delete the Data from Mongo database
-deleteDocument('6133a60f5d052ac8f2831de4');
+// deleteDocument('6133a60f5d052ac8f2831de4');
+
+
+
